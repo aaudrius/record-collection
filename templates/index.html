@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}My Collection{% endblock %}
+
+{% block content %}
+<h1 class="my-4">My Collection</h1>
+{% if collections %}
+  <div class="row">
+    {% for item in collections %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          {% set image = item.cover_image if item.cover_image else 'https://via.placeholder.com/150' %}
+          <img src="{{ image }}" class="card-img-top" alt="{{ item.title }}">
+          <div class="card-body">
+            <h5 class="card-title"><a href="{{ url_for('item_details', collection_id=item.id) }}">{{ item.title }}</a></h5>
+            <p>Year: {{ item.year }}</p>
+            <p>Country: {{ item.country }}</p>
+            <p>Label: {{ item.selected_label }}</p>
+            <p>Format: {{ item.selected_format }}</p>
+            <form method="post" action="{{ url_for('delete_from_collection', collection_id=item.id) }}">
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No items in your collection yet.</p>
+{% endif %}
+{% endblock %}

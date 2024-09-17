@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Artist Albums{% endblock %}
+
+{% block content %}
+<h1 class="my-4">Albums for Artist</h1>
+
+{% if releases %}
+  <div class="row">
+    {% for release in releases %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          {% set image = release.images[0].uri if release.images else 'https://via.placeholder.com/150' %}
+          <img src="{{ image }}" class="card-img-top" alt="{{ release.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ release.title }}</h5>
+            <p class="card-text">Year: {{ release.year }}</p>
+            <p class="card-text">Country: {{ release.country }}</p>
+            {% if release.labels %}
+              <p>
+                <select class="form-control" name="label">
+                  <option disabled selected>Label</option>
+                  {% for label in release.labels %}
+                    <option>{{ label.name }}</option>
+                  {% endfor %}
+                </select>
+              </p>
+            {% endif %}
+            {% if release.formats %}
+              <p>
+                <select class="form-control" name="format">
+                  <option disabled selected>Format</option>
+                  {% for format in release.formats %}
+                    <option>{{ format.descriptions | join(", ") }}</option>
+                  {% endfor %}
+                </select>
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="mt-4">No albums found for this artist.</p>
+{% endif %}
+<a href="{{ url_for('search') }}" class="btn btn-secondary mt-4">Back to Search</a>
+{% endblock %}

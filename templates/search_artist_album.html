@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Search Artists, Albums, and Barcodes{% endblock %}
+
+{% block content %}
+<h1 class="my-4">Find Your Records</h1>
+<form class="form" method="post" action="{{ url_for('search') }}">
+  <div class="form-row">
+    <div class="col-md-4 mb-2">
+      <input class="form-control" type="text" placeholder="Artist name" name="artist">
+    </div>
+    <div class="col-md-4 mb-2">
+      <input class="form-control" type="text" placeholder="Album title" name="album">
+    </div>
+    <div class="col-md-4 mb-2">
+      <input class="form-control" type="text" placeholder="Barcode" name="barcode" id="barcode-input">
+    </div>
+  </div>
+  <div class="form-group">
+    <button class="btn btn-outline-success mb-2" type="submit">Search</button>
+  </div>
+  <div class="form-group">
+    <button type="button" class="btn btn-info" id="scan-barcode-btn">Scan Barcode</button>
+  </div>
+</form>
+
+<div id="barcode-scanner" style="display:none;">
+  <div id="video-container">
+    <video id="barcode-video" width="300" height="200" autoplay playsinline></video>
+  </div>
+  <button type="button" class="btn btn-secondary" id="close-barcode-btn">Close</button>
+</div>
+
+{% if search_results %}
+  <h2 class="my-4">Search Results</h2>
+  <div class="row">
+    {% for result in search_results %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          {% set image = result.cover_image if result.cover_image else 'https://via.placeholder.com/150' %}
+          <img src="{{ image }}" class="card-img-top" alt="{{ result.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ result.title }}</h5>
+            {% if result.type == 'artist' %}
+              <a href="{{ url_for('artist_albums', artist_id=result.id) }}" class="btn btn-primary">View Albums</a>
+            {% elif result.type == 'release' or result.type == 'master' %}
+              <p>Year: {{ result.year }}</p>
+              <p>Country: {{ result.country }}</p>
+              <form method="post" action="{{ url_for('add_to_collection') }}">
+                <div class="form-group">
+                  <label>Label:</label>
+                  <select class="form-control" name="selected_label">
+                    <option disabled selected>Please select</option>
+                    {% for label in result.labels %}
+                      <option value="{{ label }}">{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Format:</label>
+                  <select class="form-control" name="selected_format">
+                    <option disabled selected>Please select</option>
+                    {% for format in result.formats %}
+                      <option value="{{ format }}">{{ format }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <input type="hidden" name="release_data" value='{{ result | tojson | escape }}'>
+                <button type="submit" class="btn btn-success">Add to Collection</button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% elif search_results is not none %}
+  <p class="mt-4">No results found.</p>
+{% endif %}
+<a href="{{ url_for('index') }}" class="btn btn-secondary mt-4">Back to Home</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script src="../static/barcode-scanner.js"></script>
+{% endblock %}
