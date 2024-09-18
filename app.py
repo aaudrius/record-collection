@@ -262,5 +262,41 @@ def artist_albums(artist_id):
 
     return render_template('artist_albums.html', releases=detailed_releases)
 
+@app.route('/users')
+@login_required
+def users():
+    users = User.query.filter(User.id != current_user.id).all()
+    return render_template('users.html', users=users)
+
+@app.route('/user/<int:user_id>/collection')
+@login_required
+def user_collection(user_id):
+    user = User.query.get_or_404(user_id)
+    collections = user.collections
+    is_followee = user in current_user.followees
+    return render_template('user_collection.html', user=user, collections=collections, is_friend=is_followee)
+
+@app.route('/add_friend/<int:user_id>', methods=['POST'])
+@login_required
+def follow(user_id):
+    user = User.query.get_or_404(user_id)
+    try:
+        if user not in current_user.followees:
+            current_user.followees.append(user)
+            db.session.commit()
+            flash('You now follow this user!')
+        else:
+            flash('You already follow this user.')
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        flash('An error occurred while adding friend.')
+    return redirect(url_for('user_collection', user_id=user_id))
+
+@app.route('/followees')
+@login_required
+def followees():
+    followees = current_user.followees.all()
+    return render_template('followees.html', followees=followees)
+
 if __name__ == '__main__':
     app.run(debug=True)

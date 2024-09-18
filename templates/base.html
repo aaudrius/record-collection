@@ -23,6 +23,12 @@
               <a class="nav-link" href="{{ url_for('search') }}">Search Records</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('users') }}">Browse Users</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('followees') }}">People I Follow</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
             </li>
           {% else %}

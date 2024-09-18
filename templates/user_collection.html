@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }}'s Collection{% endblock %}
+
+{% block content %}
+<h1 class="my-4">{{ user.username }}'s Collection</h1>
+{% if not is_friend %}
+  <form method="POST" action="{{ url_for('follow', user_id=user.id) }}">
+    <button type="submit" class="btn btn-success mb-4">Follow</button>
+  </form>
+{% else %}
+  <p>You now follow this user.</p>
+{% endif %}
+{% if collections %}
+  <div class="row">
+    {% for collection in collections %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          {% set image = collection.cover_image if collection.cover_image else 'https://via.placeholder.com/150' %}
+          <img src="{{ image }}" class="card-img-top" alt="{{ collection.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ collection.title }}</h5>
+            <p>Year: {{ collection.year }}</p>
+            <p>Country: {{ collection.country }}</p>
+            <p>Label: {{ collection.selected_label }}</p>
+            <p>Format: {{ collection.selected_format }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No items in {{ user.username }}'s collection yet.</p>
+{% endif %}
+<a href="{{ url_for('users') }}" class="btn btn-primary mt-4">Back to Users</a>
+{% endblock %}

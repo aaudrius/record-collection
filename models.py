@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 
@@ -21,6 +22,16 @@ class UserCollection(db.Model):
     selected_format = db.Column(db.String(200))
     spotify_album_id = db.Column(db.String(200), nullable=True)
 
+followees = db.Table('followees',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('followee_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+)
+
+User.followees = db.relationship('User',
+                               secondary=followees,
+                               primaryjoin=(User.id == followees.c.user_id),
+                               secondaryjoin=(User.id == followees.c.followee_id),
+                               lazy='dynamic')
 def init_db(app):
     db.init_app(app)
     with app.app_context():
