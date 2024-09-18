@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}All Users{% endblock %}
+
+{% block content %}
+<h1 class="my-4">All Users</h1>
+{% if users %}
+  <div class="list-group">
+    {% for user in users %}
+      <a href="{{ url_for('user_collection', user_id=user.id) }}" class="list-group-item list-group-item-action">
+        {{ user.username }}
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No other users found.</p>
+{% endif %}
+<a href="{{ url_for('index') }}" class="btn btn-primary mt-4">Back to Home</a>
+{% endblock %}

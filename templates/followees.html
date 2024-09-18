@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}People you follow{% endblock %}
+
+{% block content %}
+<h1 class="my-4">Users you follow</h1>
+{% if followees %}
+  <div class="list-group">
+    {% for followee in followees %}
+      <a href="{{ url_for('user_collection', user_id=followee.id) }}" class="list-group-item list-group-item-action">
+        {{ followee.username }}
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>You do not follow anyone yet.</p>
+{% endif %}
+<a href="{{ url_for('index') }}" class="btn btn-primary mt-4">Back to Home</a>
+{% endblock %}
