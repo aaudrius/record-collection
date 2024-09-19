@@ -274,7 +274,7 @@ def user_collection(user_id):
     user = User.query.get_or_404(user_id)
     collections = user.collections
     is_followee = user in current_user.followees
-    return render_template('user_collection.html', user=user, collections=collections, is_friend=is_followee)
+    return render_template('user_collection.html', user=user, collections=collections, is_followee=is_followee)
 
 @app.route('/add_friend/<int:user_id>', methods=['POST'])
 @login_required

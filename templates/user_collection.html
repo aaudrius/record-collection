@@ -4,12 +4,12 @@
 
 {% block content %}
 <h1 class="my-4">{{ user.username }}'s Collection</h1>
-{% if not is_friend %}
+{% if not is_followee %}
   <form method="POST" action="{{ url_for('follow', user_id=user.id) }}">
     <button type="submit" class="btn btn-success mb-4">Follow</button>
   </form>
 {% else %}
-  <p>You now follow this user.</p>
+  <p>You follow {{ user.username }}.</p>
 {% endif %}
 {% if collections %}
   <div class="row">
@@ -32,5 +32,5 @@
 {% else %}
   <p>No items in {{ user.username }}'s collection yet.</p>
 {% endif %}
-<a href="{{ url_for('users') }}" class="btn btn-primary mt-4">Back to Users</a>
+<a href="{{ url_for('users') }}" class="btn btn-secondary mt-4">Back to Users</a>
 {% endblock %}
