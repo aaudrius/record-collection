@@ -98,26 +98,60 @@ def logout():
 @login_required
 def search():
     if request.method == 'POST':
-        artist = request.form['artist']
-        album = request.form['album']
-        barcode = request.form.get('barcode', '')
+        artist = request.form.get('artist', '').strip()
+        album = request.form.get('album', '').strip()
+        format = request.form.get('format', '').strip()
+        barcode = request.form.get('barcode', '').strip()
 
         url = 'https://api.discogs.com/database/search'
         params = {
-            'artist': artist,
-            'release_title': album,
-            'barcode': barcode,
             'key': DISCOGS_KEY,
             'secret': DISCOGS_SECRET,
         }
-        response = requests.get(url, params=params)
-        search_results = response.json().get('results', [])
+
+        if barcode:
+            params['barcode'] = barcode
+            
+        if artist and not album and not format:
+            params['q'] = artist
+            params['type'] = 'artist'
+        elif album and not artist and not format:
+            params['release_title'] = album
+            params['type'] = 'release'
+        elif artist and album and not format:
+            params['q'] = artist
+            params['release_title'] = album
+            params['type'] = 'release'
+        elif artist and format and not album:
+            params['q'] = artist
+            params['format'] = format
+            params['type'] = 'release'
+        elif format and album and not artist:
+            params['release_title'] = album
+            params['format'] = format
+            params['type'] = 'release'
+        elif format and not artist and not album:
+            params['format'] = format
+        elif artist and album and format:
+            params['q'] = artist
+            params['release_title'] = album
+            params['format'] = format
+            params['type'] = 'release'
+
+        try:
+            response = requests.get(url, params=params)
+            response.raise_for_status()
+            search_results = response.json().get('results', [])
+        except requests.exceptions.RequestException as e:
+            flash(f"An error occurred: {e}")
+            return redirect(url_for('search'))
+
 
         for result in search_results:
             result['year'] = result.get('year', 'N/A')
             result['country'] = result.get('country', 'N/A')
             result['labels'] = result.get('label', [])
-            result['formats'] = result.get('format', [])
+            result['format'] = result.get('format', 'N/A')
             result['cover_image'] = result.get('cover_image', 'https://via.placeholder.com/150')
 
             if 'label' in result and isinstance(result['label'], list):
