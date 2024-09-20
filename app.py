@@ -160,11 +160,6 @@ def search():
             else:
                 result['labels'] = []
 
-            # if 'format' in result and isinstance(result['format'], list):
-            #     result['formats'] = result['format']
-            # else:
-            #     result['formats'] = []
-
         return render_template('search_artist_album.html', search_results=search_results)
     return render_template('search_artist_album.html')
 
