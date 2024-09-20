@@ -19,7 +19,7 @@ class UserCollection(db.Model):
     year = db.Column(db.String(20))
     country = db.Column(db.String(20))
     selected_label = db.Column(db.String(200))
-    selected_format = db.Column(db.String(200))
+    format = db.Column(db.String(200))
     spotify_album_id = db.Column(db.String(200), nullable=True)
 
 followees = db.Table('followees',

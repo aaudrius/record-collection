@@ -58,6 +58,7 @@
             {% elif result.type == 'release' or result.type == 'master' %}
               <p>Year: {{ result.year }}</p>
               <p>Country: {{ result.country }}</p>
+              <p>Format: {{result.format}}</p>
               <form method="post" action="{{ url_for('add_to_collection') }}">
                 <div class="form-group">
                   <label>Label:</label>
@@ -65,15 +66,6 @@
                     <option disabled selected>Please select</option>
                     {% for label in result.labels %}
                       <option value="{{ label }}">{{ label }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Format:</label>
-                  <select class="form-control" name="selected_format">
-                    <option disabled selected>Please select</option>
-                    {% for format in result.formats %}
-                      <option value="{{ format }}">{{ format }}</option>
                     {% endfor %}
                   </select>
                 </div>
