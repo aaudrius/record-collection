@@ -151,7 +151,8 @@ def search():
             result['year'] = result.get('year', 'N/A')
             result['country'] = result.get('country', 'N/A')
             result['labels'] = result.get('label', [])
-            result['format'] = result.get('format', 'N/A')
+            formats = result.get('format', [])
+            result['format'] = formats[0] if formats else 'N/A'
             result['cover_image'] = result.get('cover_image', 'https://via.placeholder.com/150')
 
             if 'label' in result and isinstance(result['label'], list):
@@ -159,10 +160,10 @@ def search():
             else:
                 result['labels'] = []
 
-            if 'format' in result and isinstance(result['format'], list):
-                result['formats'] = result['format']
-            else:
-                result['formats'] = []
+            # if 'format' in result and isinstance(result['format'], list):
+            #     result['formats'] = result['format']
+            # else:
+            #     result['formats'] = []
 
         return render_template('search_artist_album.html', search_results=search_results)
     return render_template('search_artist_album.html')
@@ -173,7 +174,7 @@ def add_to_collection():
     try:
         release_data = json.loads(request.form['release_data'])
         selected_label = request.form['selected_label']
-        selected_format = request.form['selected_format']
+        # format = request.form['format']
         artist_album = re.split(' - ', release_data['title'])
         artist = artist_album[0]
         album = artist_album[1]
@@ -189,8 +190,8 @@ def add_to_collection():
             cover_image=release_data.get('cover_image', ''),
             year=release_data.get('year', 'N/A'),
             country=release_data.get('country', 'N/A'),
+            format=release_data.get('format', 'N/A'),
             selected_label=selected_label,
-            selected_format=selected_format,
             spotify_album_id=spotify_album_id
         )
         db.session.add(new_record)
