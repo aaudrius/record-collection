@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import db, User, UserCollection, init_db
+from models import db, Users, UserCollections, init_db
 from helpers import get_spotify_client, search_spotify_album
 import requests
 import json
@@ -28,20 +28,20 @@ MAX_RETRIES = 5
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return Users.query.get(int(user_id))
 
 def fetch_with_retry(url, params, retries=MAX_RETRIES):
     while retries > 0:
         response = requests.get(url, params=params)
         if response.status_code == 200:
-            if response.text.strip():  # Ensure response is not empty
+            if response.text.strip():
                 return response
             else:
                 print("Error: Received empty response")
                 return None
         elif response.status_code == 429:
             print("Rate limited. Retrying...")
-            time.sleep(2 ** (MAX_RETRIES - retries))  # Exponential backoff
+            time.sleep(2 ** (MAX_RETRIES - retries))
             retries -= 1
         else:
             print(f"HTTP error: {response.status_code} {response.text}")
@@ -61,11 +61,11 @@ def register():
         password = request.form['password']
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
 
-        if User.query.filter_by(username=username).first():
+        if Users.query.filter_by(username=username).first():
             flash('Username already exists.')
             return redirect(url_for('register'))
 
-        new_user = User(username=username, password=hashed_password)
+        new_user = Users(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
 
@@ -78,7 +78,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        user = Users.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
             login_user(user)
@@ -183,7 +183,7 @@ def add_to_collection():
         spotify_client = get_spotify_client()
         spotify_album_id = search_spotify_album(spotify_client, album, artist)
 
-        new_record = UserCollection(
+        new_record = UserCollections(
             user_id=current_user.id,
             release_id=release_data['id'],
             title=release_data['title'],
@@ -205,7 +205,7 @@ def add_to_collection():
 @login_required
 def delete_from_collection(collection_id):
     try:
-        record = UserCollection.query.get_or_404(collection_id)
+        record = UserCollections.query.get_or_404(collection_id)
         if record.user_id != current_user.id:
             flash('You do not have permission to delete this item.')
             return redirect(url_for('index'))
@@ -220,7 +220,7 @@ def delete_from_collection(collection_id):
 @app.route('/item_details/<int:collection_id>')
 @login_required
 def item_details(collection_id):
-    record = UserCollection.query.get_or_404(collection_id)
+    record = UserCollections.query.get_or_404(collection_id)
     if record.user_id != current_user.id:
         flash('You do not have permission to view this item.')
         return redirect(url_for('index'))
@@ -300,13 +300,13 @@ def artist_albums(artist_id):
 @app.route('/users')
 @login_required
 def users():
-    users = User.query.filter(User.id != current_user.id).all()
+    users = Users.query.filter(Users.id != current_user.id).all()
     return render_template('users.html', users=users)
 
 @app.route('/user/<int:user_id>/collection')
 @login_required
 def user_collection(user_id):
-    user = User.query.get_or_404(user_id)
+    user = Users.query.get_or_404(user_id)
     collections = user.collections
     is_followee = user in current_user.followees
     return render_template('user_collection.html', user=user, collections=collections, is_followee=is_followee)
@@ -314,7 +314,7 @@ def user_collection(user_id):
 @app.route('/add_friend/<int:user_id>', methods=['POST'])
 @login_required
 def follow(user_id):
-    user = User.query.get_or_404(user_id)
+    user = Users.query.get_or_404(user_id)
     try:
         if user not in current_user.followees:
             current_user.followees.append(user)
