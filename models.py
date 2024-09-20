@@ -27,10 +27,10 @@ followees = db.Table('followees',
     db.Column('followee_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
 )
 
-User.followees = db.relationship('User',
+Users.followees = db.relationship('User',
                                secondary=followees,
-                               primaryjoin=(User.id == followees.c.user_id),
-                               secondaryjoin=(User.id == followees.c.followee_id),
+                               primaryjoin=(Users.id == followees.c.user_id),
+                               secondaryjoin=(Users.id == followees.c.followee_id),
                                lazy='dynamic')
 def init_db(app):
     db.init_app(app)
