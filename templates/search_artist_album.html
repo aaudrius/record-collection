@@ -4,7 +4,9 @@
 
 {% block content %}
 <h1 class="my-4">Find Your Records</h1>
+<button type="button" class="btn btn-secondary mb-4" id="toggle-search-btn">Switch to Barcode Search</button>
 <form class="form" method="post" action="{{ url_for('search') }}">
+  <div id="album_search">
   <div class="form-row">
     <div class="col-md-4 mb-2">
       <input class="form-control" type="text" placeholder="Artist name" name="artist">
@@ -24,6 +26,13 @@
         <option value="blu-ray">Blu-ray</option>
       </select>
     </div>
+  </div>
+  <div class="form-group">
+    <button class="btn button mb-2" type="submit">Search</button>
+  </div>
+</div>
+<div id="barcode_search">
+  <div class="form-row">
     <div class="col-md-4 mb-2">
       <input class="form-control" type="text" placeholder="Barcode" name="barcode" id="barcode-input">
     </div>
@@ -34,6 +43,7 @@
   <div class="form-group">
     <button type="button" class="btn button" id="scan-barcode-btn">Scan Barcode</button>
   </div>
+</div>
 </form>
 
 <div id="barcode-scanner" style="display:none;">
@@ -85,4 +95,23 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 <script src="../static/barcode-scanner.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var toggleSearchBtn = document.getElementById('toggle-search-btn');
+    var albumSearch = document.getElementById('album_search');
+    var barcodeSearch = document.getElementById('barcode_search');
+    barcodeSearch.style.display = 'none';
+    toggleSearchBtn.addEventListener('click', function() {
+      if (albumSearch.style.display === 'none') {
+        albumSearch.style.display = 'block';
+        barcodeSearch.style.display = 'none';
+        toggleSearchBtn.textContent = 'Switch to Barcode Search';
+      } else {
+        albumSearch.style.display = 'none';
+        barcodeSearch.style.display = 'block';
+        toggleSearchBtn.textContent = 'Switch to Album Search';
+      }
+    });
+  });
+  </script>
 {% endblock %}

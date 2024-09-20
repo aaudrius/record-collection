@@ -111,8 +111,12 @@
     margin-top: 10px;
   }
 
-  input.form-control, .list-group-item, .card-body .card{
+  input.form-control, select.form-control, .list-group-item, .card-body .card{
     background-color: rgba(255, 255, 255, .6);
+  }
+
+  input.form-control, select.form-control{
+    height: 40px;
   }
 
   .list-group-item:hover{
