@@ -21,6 +21,7 @@ class UserCollections(db.Model):
     selected_label = db.Column(db.String(200))
     format = db.Column(db.String(200))
     spotify_album_id = db.Column(db.String(200), nullable=True)
+    price = db.Column(db.Float, nullable=True) 
 
 followees = db.Table('followees',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),

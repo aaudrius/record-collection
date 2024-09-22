@@ -1,0 +1,79 @@
+
+            "id": 18839,
+            "type": "artist",
+            "user_data": {
+                "in_wantlist": false,
+                "in_collection": false
+            },
+            "master_id": null,
+            "master_url": null,
+            "uri": "/artist/18839-Metallica",
+            "title": "Metallica",
+            "thumb": "https://i.discogs.com/1IyeihNpIJkVeV56-eoeQlpt9NQhfZn8FEYW2ZVtfcM/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE4ODM5/LTE1NTU4NTQxNjQt/MjM4Ny5qcGVn.jpeg",
+            "cover_image": "https://i.discogs.com/ypZclL3aRCjEtOU8NTTljmZA2yDB3zl9TiG5SrMUkFg/rs:fit/g:sm/q:90/h:435/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9BLTE4ODM5/LTE1NTU4NTQxNjQt/MjM4Ny5qcGVn.jpeg",
+            "resource_url": "https://api.discogs.com/artists/18839"
+        },
+        {
+            "country": "US",
+            "year": "1991",
+            "format": [
+                "CD",
+                "Album"
+            ],
+            "label": [
+                "Elektra",
+                "Elektra",
+                "WEA Manufacturing",
+                "Allied Record Company",
+                "Specialty Records Corporation",
+                "Elektra Entertainment",
+                "Elektra Entertainment",
+                "One On One Studios",
+                "Creeping Death Music",
+                "Sterling Sound"
+            ],
+            "type": "master",
+            "genre": [
+                "Rock"
+            ],
+            "style": [
+                "Heavy Metal"
+            ],
+            "id": 6651,
+            "barcode": [
+                "0 7559-61113-2 4",
+                "075596111324",
+                "ARC",
+                "ARC 2 61113-2 SRC=03 *M2 S8",
+                "ARC 2 61113-2 SRC=01 *M7 S10",
+                "ARC 2 61113-2 SRC=01 *M9 S17",
+                "ARC 2 61113-2 SRC=01 *M9 S4",
+                "ARC 2 61113-2 SRC=01 *M12 S4",
+                "ARC 2 61113-2 SRC=01 *M7 S3",
+                "ARC 2 61113-2 SRC=01 *M7 S12",
+                "ARC 2 61113-2 SRC=01 *M12 S1",
+                "ARC 2 61113-2 SRC=01 *M12 S7",
+                "ARC 2 61113-2 SRC=01 *M4 S4",
+                "ARC 2 61113-2 SRC=01 *M9 S5",
+                "ARC 2 61113-2 SRC=01 *M9 S19",
+                "ARC 2 61113-2 SRC=01 *M9 S16",
+                "ARC 2 61113-2 SRC=01 *M6 S13",
+                "ARC 2 61113-2 SRC=01 *M9 S12"
+            ],
+            "user_data": {
+                "in_wantlist": false,
+                "in_collection": false
+            },
+            "master_id": 6651,
+            "master_url": "https://api.discogs.com/masters/6651",
+            "uri": "/master/6651-Metallica-Metallica",
+            "catno": "9 61113-2",
+            "title": "Metallica - Metallica",
+            "thumb": "https://i.discogs.com/TBO3bYISoDz3aZXI_ySjzH1ayG2VLcv5vSV9a9ngPXw/rs:fit/g:sm/q:40/h:150/w:150/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzMTk3/MzUtMTQzMjI0ODQ0/OS02OTAxLmpwZWc.jpeg",
+            "cover_image": "https://i.discogs.com/S0oGfHh4ZvlYY33NOhFAyhwLy_tYQ23Exj7M4qD7tn0/rs:fit/g:sm/q:90/h:591/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTQzMTk3/MzUtMTQzMjI0ODQ0/OS02OTAxLmpwZWc.jpeg",
+            "resource_url": "https://api.discogs.com/masters/6651",
+            "community": {
+                "want": 145891,
+                "have": 188659
+            }
+        },

@@ -4,6 +4,9 @@
 
 {% block content %}
 <h1 class="my-4">{{ user.username }}'s Collection</h1>
+{% if is_followee%}
+<h3>Total market value of {{ user.username }}'s collection is ${{total_value}}</h3>
+{% endif %}
 {% if not is_followee %}
   <form method="POST" action="{{ url_for('follow', user_id=user.id) }}">
     <button type="submit" class="btn btn-success mb-4">Follow</button>
@@ -23,7 +26,7 @@
           <img src="{{ image }}" class="card-img-top" alt="{{ item.title }}">
           <div class="card-body">
             <h5 class="card-title">
-              {% if item.user_id == current_user.id or is_followee %}
+              {% if is_followee %}
               <a href="{{ url_for('item_details', collection_id=item.id) }}">{{ item.title }}</a>
               {% else %}
               {{ item.title }}
@@ -33,6 +36,9 @@
             <p>Country: {{ item.country }}</p>
             <p>Label: {{ item.selected_label }}</p>
             <p>Format: {{ item.format }}</p>
+            {% if is_followee %}
+            <p>Market value: ${{item.price}}</p>
+            {% endif %}
           </div>
         </div>
       </div>

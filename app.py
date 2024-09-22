@@ -48,11 +48,28 @@ def fetch_with_retry(url, params, retries=MAX_RETRIES):
             return None
     return None
 
+def fetch_detailed_release_info(result_id, result_type):
+    if result_type == 'master':
+        url = f"https://api.discogs.com/masters/{result_id}"
+    else:  # results could be of type 'release'
+        url = f"https://api.discogs.com/releases/{result_id}"
+
+    params = {
+        'key': DISCOGS_KEY,
+        'secret': DISCOGS_SECRET,
+    }
+
+    detailed_response = fetch_with_retry(url, params)
+    if detailed_response:
+        return detailed_response.json()
+    return None
+
 @app.route('/')
 @login_required
 def index():
     collections = current_user.collections
-    return render_template('index.html', collections=collections)
+    total_value = sum(record.price for record in collections if record.price is not None)
+    return render_template('index.html', collections=collections, total_value=total_value)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -62,9 +79,9 @@ def register():
         hashed_password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=8)
 
         if Users.query.filter_by(username=username).first():
-            flash('Username already exists.')
+            flash('Username already exists.')                        
             return redirect(url_for('register'))
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                              
         new_user = Users(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
@@ -103,14 +120,6 @@ def search():
         barcode = request.form.get('barcode', '').strip()
         format = request.form.get('format', '').strip()
         search_type = request.form.get('search_type')
-
-        if search_type == 'album_search' and (not artist or not album):
-            flash('Artist name and album title are mandatory for album search.')
-            return render_template('search_artist_album.html')
-
-        if search_type == 'barcode_search' and not barcode:
-            flash('Barcode is mandatory for barcode search.')
-            return render_template('search_artist_album.html')
 
         url = 'https://api.discogs.com/database/search'
         params = {
@@ -163,6 +172,8 @@ def add_to_collection():
         artist = artist_album[0]
         album = artist_album[1]
 
+        detailed_info = fetch_detailed_release_info(release_data['id'], release_data['type'])
+        lowest_price = detailed_info.get('lowest_price', None) if detailed_info else None
 
         spotify_client = get_spotify_client()
         spotify_album_id = search_spotify_album(spotify_client, album, artist)
@@ -175,7 +186,7 @@ def add_to_collection():
             year=release_data.get('year', 'N/A'),
             country=release_data.get('country', 'N/A'),
             format=release_data.get('format', 'N/A'),
-            price=release_data.get('lowest_price', 'N/A'),
+            price=lowest_price,
             selected_label=selected_label,
             spotify_album_id=spotify_album_id
         )
@@ -238,8 +249,9 @@ def users():
 def user_collection(user_id):
     user = Users.query.get_or_404(user_id)
     collections = user.collections
+    total_value = sum(record.price for record in collections if record.price is not None)
     is_followee = user in current_user.followees
-    return render_template('user_collection.html', user=user, collections=collections, is_followee=is_followee)
+    return render_template('user_collection.html', user=user, collections=collections, is_followee=is_followee, total_value=total_value)
 
 @app.route('/add_friend/<int:user_id>', methods=['POST'])
 @login_required
