@@ -22,7 +22,13 @@
           {% set image = item.cover_image if item.cover_image else 'https://via.placeholder.com/150' %}
           <img src="{{ image }}" class="card-img-top" alt="{{ item.title }}">
           <div class="card-body">
-            <h5 class="card-title"><a href="{{ url_for('item_details', collection_id=item.id) }}">{{ item.title }}</a></h5>
+            <h5 class="card-title">
+              {% if item.user_id == current_user.id or is_followee %}
+              <a href="{{ url_for('item_details', collection_id=item.id) }}">{{ item.title }}</a>
+              {% else %}
+              {{ item.title }}
+              {% endif %}
+            </h5>
             <p>Year: {{ item.year }}</p>
             <p>Country: {{ item.country }}</p>
             <p>Label: {{ item.selected_label }}</p>
