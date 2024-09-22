@@ -100,8 +100,17 @@ def search():
     if request.method == 'POST':
         artist = request.form.get('artist', '').strip()
         album = request.form.get('album', '').strip()
-        format = request.form.get('format', '').strip()
         barcode = request.form.get('barcode', '').strip()
+        format = request.form.get('format', '').strip()
+        search_type = request.form.get('search_type')
+
+        if search_type == 'album_search' and (not artist or not album):
+            flash('Artist name and album title are mandatory for album search.')
+            return render_template('search_artist_album.html')
+
+        if search_type == 'barcode_search' and not barcode:
+            flash('Barcode is mandatory for barcode search.')
+            return render_template('search_artist_album.html')
 
         url = 'https://api.discogs.com/database/search'
         params = {
@@ -109,34 +118,15 @@ def search():
             'secret': DISCOGS_SECRET,
         }
 
-        if barcode:
-            params['barcode'] = barcode
+        if search_type == 'album_search':
+            params['artist'] = artist
+            params['release_title'] = album
             
-        if artist and not album and not format:
-            params['q'] = artist
-            params['type'] = 'artist'
-        elif album and not artist and not format:
-            params['release_title'] = album
-            params['type'] = 'release'
-        elif artist and album and not format:
-            params['q'] = artist
-            params['release_title'] = album
-            params['type'] = 'release'
-        elif artist and format and not album:
-            params['q'] = artist
+        if search_type == 'barcode_search':
+            params['barcode'] = barcode
+
+        if format:
             params['format'] = format
-            params['type'] = 'release'
-        elif format and album and not artist:
-            params['release_title'] = album
-            params['format'] = format
-            params['type'] = 'release'
-        elif format and not artist and not album:
-            params['format'] = format
-        elif artist and album and format:
-            params['q'] = artist
-            params['release_title'] = album
-            params['format'] = format
-            params['type'] = 'release'
 
         try:
             response = requests.get(url, params=params)
@@ -145,7 +135,6 @@ def search():
         except requests.exceptions.RequestException as e:
             flash(f"An error occurred: {e}")
             return redirect(url_for('search'))
-
 
         for result in search_results:
             result['year'] = result.get('year', 'N/A')
@@ -163,13 +152,13 @@ def search():
         return render_template('search_artist_album.html', search_results=search_results)
     return render_template('search_artist_album.html')
 
+
 @app.route('/add_to_collection', methods=['POST'])
 @login_required
 def add_to_collection():
     try:
         release_data = json.loads(request.form['release_data'])
         selected_label = request.form['selected_label']
-        # format = request.form['format']
         artist_album = re.split(' - ', release_data['title'])
         artist = artist_album[0]
         album = artist_album[1]
@@ -186,6 +175,7 @@ def add_to_collection():
             year=release_data.get('year', 'N/A'),
             country=release_data.get('country', 'N/A'),
             format=release_data.get('format', 'N/A'),
+            price=release_data.get('lowest_price', 'N/A'),
             selected_label=selected_label,
             spotify_album_id=spotify_album_id
         )
@@ -216,81 +206,26 @@ def delete_from_collection(collection_id):
 @login_required
 def item_details(collection_id):
     record = UserCollections.query.get_or_404(collection_id)
-    if record.user_id != current_user.id:
+    user = Users.query.get(record.user_id)
+    if record.user_id == current_user.id or user in current_user.followees:
+
+        release_url = f"https://api.discogs.com/releases/{record.release_id}"
+        master_url = f"https://api.discogs.com/masters/{record.release_id}"
+        response_release = requests.get(release_url)
+        response_master = requests.get(master_url)
+        release_data = response_release.json()
+        master_data = response_master.json()
+
+    else:
+        print(current_user.followees.all(), record.user_id)
         flash('You do not have permission to view this item.')
         return redirect(url_for('index'))
-
-    release_url = f"https://api.discogs.com/releases/{record.release_id}"
-    master_url = f"https://api.discogs.com/masters/{record.release_id}"
-    response_release = requests.get(release_url)
-    response_master = requests.get(master_url)
-
-    release_data = response_release.json()
-    master_data = response_master.json()
 
     if not release_data or not master_data:
         flash('Something is wrong with this release')
         return render_template('search_artist_album.html')
 
     return render_template('item_details.html', record=record, release_data=release_data, master_data=master_data)
-
-@app.route('/artist/<int:artist_id>/albums')
-@login_required
-def artist_albums(artist_id):
-    url = f'https://api.discogs.com/artists/{artist_id}/releases'
-    params = {
-        'sort': 'year',
-        'sort_order': 'desc',
-        'key': DISCOGS_KEY,
-        'secret': DISCOGS_SECRET,
-    }
-    response = requests.get(url, params=params)
-
-    releases_response = fetch_with_retry(url, params)
-    if not releases_response:
-        flash('Failed to fetch artist releases')
-        return redirect(url_for('index'))
-
-    try:
-        releases = releases_response.json().get('releases', [])
-    except ValueError as e:
-        print(f"Error parsing JSON response: {str(e)}")
-        print("Response content:", releases_response.text)
-        flash('Error parsing artist releases data')
-        return redirect(url_for('index'))
-
-    detailed_releases = []
-
-    for release in releases:
-        try:
-            if release.get('type') == 'master':
-                release_url = f"https://api.discogs.com/masters/{release['id']}"
-            else:
-                release_url = f"https://api.discogs.com/releases/{release['id']}"
-
-            release_response = fetch_with_retry(release_url, params)
-            if not release_response:
-                continue
-
-
-
-            if release_response.text.strip():
-                detailed_release = release_response.json()
-                detailed_release['year'] = detailed_release.get('year', 'N/A')
-                detailed_release['country'] = detailed_release.get('country', 'N/A')
-                detailed_release['labels'] = detailed_release.get('labels', [])
-                detailed_release['formats'] = detailed_release.get('formats', [])
-                detailed_release['images'] = detailed_release.get('images', [])
-                detailed_releases.append(detailed_release)
-            else:
-                print("Error: Received empty release response")
-
-        except ValueError as e:
-                print(f"Error parsing JSON response: {str(e)}")
-                print("Response content:", release_response.text)
-                continue
-
-    return render_template('artist_albums.html', releases=detailed_releases)
 
 @app.route('/users')
 @login_required
@@ -327,6 +262,24 @@ def follow(user_id):
 def followees():
     followees = current_user.followees.all()
     return render_template('followees.html', followees=followees)
+
+@app.route('/unfollow/<int:user_id>', methods=['POST'])
+@login_required
+def unfollow(user_id):
+    user = Users.query.get_or_404(user_id)
+
+    try:
+        if user in current_user.followees:
+            current_user.followees.remove(user)
+            db.session.commit()
+            flash('You have unfollowed this user.')
+        else:
+            flash('You do not follow this user.')
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        flash('An error occurred while unfollowing the user.')
+    
+    return redirect(url_for('user_collection', user_id=user_id))
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -13,11 +13,11 @@
     </div>
   {% endif %}
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 right">
     <p><strong>Year:</strong> {{ record.year }}</p>
     <p><strong>Country:</strong> {{ record.country }}</p>
     <p><strong>Label:</strong> {{ record.selected_label }}</p>
-    <p><strong>Format:</strong> {{ record.selected_format }}</p>
+    <p><strong>Format:</strong> {{ record.format }}</p>
     <p><strong>Genres:</strong> {{ release_data.genres | join(', ') }}</p>
     <p><strong>Styles:</strong> {{ release_data.styles | join(', ') }}</p>
     <p><strong>Tracklist:</strong></p>
@@ -36,6 +36,8 @@
     {% else %}
       <p>No track information available.</p>
     {% endif %}
+    <h5 class="card-title">Market Value</h5>
+    <p class="card-text">Price: ${{ release_data.lowest_price | default('N/A') }}</p>
   </div>
 </div>
 <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Collection</a>

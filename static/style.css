@@ -98,8 +98,11 @@
     border: 1px rgba(57, 127, 189, 1) solid;
     color: rgb(57, 127, 189, 1);
   }
-  .delete{
+  .delete, .unfollow{
     background-color:rgba(187, 58, 77, .8);
+  }
+  .unfollow{
+    margin-bottom: 20px;
   }
   .delete:hover{
     background-color:rgba(187, 58, 77, .3);
@@ -117,10 +120,16 @@
 
   input.form-control, select.form-control{
     height: 40px;
+    color: #495057;
   }
 
   .list-group-item:hover{
     background-color: rgba(255, 255, 255, .4);
+  }
+
+  .right{
+    padding-top: 20px;
+    background-color: rgba(255, 255, 255, .6);
   }
 
   #barcode-scanner {
