@@ -80,6 +80,7 @@
               <input type="hidden" name="release_data" value='{{ result | tojson | escape }}'>
               <button type="submit" class="btn btn-success">Add to Collection</button>
             </form>
+            <p>Market Value: {{result.price}}</p>
           </div>
         </div>
       </div>

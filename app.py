@@ -175,6 +175,7 @@ def add_to_collection():
             year=release_data.get('year', 'N/A'),
             country=release_data.get('country', 'N/A'),
             format=release_data.get('format', 'N/A'),
+            price=release_data.get('lowest_price', 'N/A'),
             selected_label=selected_label,
             spotify_album_id=spotify_album_id
         )
