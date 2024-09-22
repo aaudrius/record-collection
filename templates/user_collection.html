@@ -10,20 +10,23 @@
   </form>
 {% else %}
   <p>You follow {{ user.username }}.</p>
+  <form method="post" action="{{ url_for('unfollow', user_id=user.id) }}">
+    <button type="submit" class="btn btn-danger button unfollow">Unfollow</button>
+  </form>
 {% endif %}
 {% if collections %}
   <div class="row">
-    {% for collection in collections %}
+    {% for item in collections %}
       <div class="col-md-4 mb-4">
         <div class="card">
-          {% set image = collection.cover_image if collection.cover_image else 'https://via.placeholder.com/150' %}
-          <img src="{{ image }}" class="card-img-top" alt="{{ collection.title }}">
+          {% set image = item.cover_image if item.cover_image else 'https://via.placeholder.com/150' %}
+          <img src="{{ image }}" class="card-img-top" alt="{{ item.title }}">
           <div class="card-body">
-            <h5 class="card-title">{{ collection.title }}</h5>
-            <p>Year: {{ collection.year }}</p>
-            <p>Country: {{ collection.country }}</p>
-            <p>Label: {{ collection.selected_label }}</p>
-            <p>Format: {{ collection.selected_format }}</p>
+            <h5 class="card-title"><a href="{{ url_for('item_details', collection_id=item.id) }}">{{ item.title }}</a></h5>
+            <p>Year: {{ item.year }}</p>
+            <p>Country: {{ item.country }}</p>
+            <p>Label: {{ item.selected_label }}</p>
+            <p>Format: {{ item.format }}</p>
           </div>
         </div>
       </div>

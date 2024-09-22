@@ -13,11 +13,11 @@
     </div>
   {% endif %}
   </div>
-  <div class="col-md-6">
+  <div class="col-md-6 right">
     <p><strong>Year:</strong> {{ record.year }}</p>
     <p><strong>Country:</strong> {{ record.country }}</p>
     <p><strong>Label:</strong> {{ record.selected_label }}</p>
-    <p><strong>Format:</strong> {{ record.selected_format }}</p>
+    <p><strong>Format:</strong> {{ record.format }}</p>
     <p><strong>Genres:</strong> {{ release_data.genres | join(', ') }}</p>
     <p><strong>Styles:</strong> {{ release_data.styles | join(', ') }}</p>
     <p><strong>Tracklist:</strong></p>
