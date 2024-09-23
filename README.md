@@ -8,13 +8,13 @@ The app also allows users to browse the collections of other users and follw the
 
 ## Features
 - User registration and authentication
-- Search for records by artist, album, format, or barcode
+- Search for records by artist, album, format or barcode
 - Add records to your collection
 - View, edit, and delete records in your collection
 - View details of each record
 - Listen to record if it is available on Spotify
 - Follow other users and view their collections
-- Calculate the total value of your collection based on the lowest price of each record
+- Calculate the total value of your collection or collections of users you follw based on the price of each record
 
 ## Tech Stack
 - Flask
