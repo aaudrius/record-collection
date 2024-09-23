@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function() {
-    var toggleSearchBtn = document.getElementById('toggle-search-btn');
-    var albumSearch = document.getElementById('album_search');
-    var barcodeSearch = document.getElementById('barcode_search');
-    var searchType = document.getElementById('search-type');
+    let toggleSearchBtn = document.getElementById('toggle-search-btn');
+    let albumSearch = document.getElementById('album_search');
+    let barcodeSearch = document.getElementById('barcode_search');
+    let searchType = document.getElementById('search-type');
 
     toggleSearchBtn.addEventListener('click', function() {
       if (albumSearch.style.display === 'none') {
@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     document.getElementById('search-form').addEventListener('submit', function(e) {
-      var artistInput = document.getElementById('artist-input');
-      var albumInput = document.getElementById('album-input');
-      var barcodeInput = document.getElementById('barcode-input');
+      let artistInput = document.getElementById('artist-input');
+      let albumInput = document.getElementById('album-input');
+      let barcodeInput = document.getElementById('barcode-input');
       
       if (searchType.value === 'album_search') {
         if (!artistInput.value.trim()) {
