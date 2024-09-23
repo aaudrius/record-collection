@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
         barcodeSearch.style.display = 'none';
         searchType.value = 'album_search';
         toggleSearchBtn.textContent = 'Switch to Barcode Search';
+        stopVideoStream();
       } else {
         albumSearch.style.display = 'none';
         barcodeSearch.style.display = 'block';
