@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="my-4">{{ user.username }}'s Collection</h1>
 {% if is_followee%}
-<h3>Total market value of {{ user.username }}'s collection is ${{total_value}}</h3>
+<h3>Total market value of {{ user.username }}'s collection is ${{total_value | round(2)}}</h3>
 {% endif %}
 {% if not is_followee %}
   <form method="POST" action="{{ url_for('follow', user_id=user.id) }}">
