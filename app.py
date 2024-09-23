@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -10,6 +12,7 @@ import json
 import re
 import time
 
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'yoursecretkey'
@@ -22,8 +25,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-DISCOGS_KEY = 'SCtzOnNEsRmZdJCNXPdw'
-DISCOGS_SECRET = 'MrThSnTxABZdKmUguaAYQsWJvTfqIuqa'
+DISCOGS_KEY = os.getenv('DISCOGS_KEY')
+DISCOGS_SECRET = os.getenv('DISCOGS_SECRET')
 MAX_RETRIES = 5
 
 @login_manager.user_loader
