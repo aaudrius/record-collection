@@ -87,12 +87,14 @@ record-collection-app/
 ├── migrations/             # Database migrations
 ├── templates/
 │   ├── base.html           # Base template
-│   ├── index.html          # Home page template
+│   ├── index.html          # Home page template, collection of current user
 │   ├── login.html          # Login page template
 │   ├── register.html       # Registration page template
 │   ├── search_artist_album.html  # Search results template
 │   ├── user_collection.html  # User collection template
-│   └── ...
+│   ├── users.html            # All registered users list template
+│   ├── followees.html        # Users follwed by current user list template
+│   └── item_details.html     # Collection item details (album/release) template
 └── static/                 # Images
     ├── css/                # CSS files
     └── js/                 # JavaScript files
