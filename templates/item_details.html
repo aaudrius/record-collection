@@ -39,5 +39,5 @@
     <p class="card-text"><strong>Market value:</strong> ${{ release_data.lowest_price | default('N/A') }}</p>
   </div>
 </div>
-<a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Collection</a>
+<a href="{% if is_followee %}{{ url_for('user_collection', user_id=record.user_id) }}{% else %}{{ url_for('index') }}{% endif %}" class="btn btn-secondary">Back to Collection</a>
 {% endblock %}

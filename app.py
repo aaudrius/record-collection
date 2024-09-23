@@ -15,7 +15,7 @@ import time
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'yoursecretkey'
+app.secret_key = 'somesecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///record_collection.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -220,7 +220,11 @@ def delete_from_collection(collection_id):
 @login_required
 def item_details(collection_id):
     record = UserCollections.query.get_or_404(collection_id)
-    user = Users.query.get(record.user_id)
+    if record.user_id != current_user.id:
+        user = Users.query.get_or_404(record.user_id)
+        is_followee = True if user in current_user.followees else False
+    else:
+        is_followee = False
     if record.user_id == current_user.id or user in current_user.followees:
 
         release_url = f"https://api.discogs.com/releases/{record.release_id}"
@@ -239,7 +243,7 @@ def item_details(collection_id):
         flash('Something is wrong with this release')
         return render_template('search_artist_album.html')
 
-    return render_template('item_details.html', record=record, release_data=release_data, master_data=master_data)
+    return render_template('item_details.html', record=record, release_data=release_data, master_data=master_data, is_followee=is_followee)
 
 @app.route('/users')
 @login_required
