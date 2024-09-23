@@ -109,7 +109,7 @@ record-collection-app/
 - **Album:** Enter an album title to find specific albums and releases.
 - **Format:** Select a format (e.g., Vynil, CD, Cassette, etc.) from the dropdown menu to filter the search.
 #### Barcode search
--**Barcode:** Enter or scan a barcode of your release to find it in discogs database.
+- **Barcode:** Enter or scan a barcode of your release to find it in discogs database.
 
 ### Adding records to your collection
 1. **Search:** Perform a search using the form on the search page (album search or barcode search).
@@ -130,4 +130,11 @@ record-collection-app/
 ### Discogs API
 The app uses the discogs API to search for the records and fetch detailed info about them. You need to register for a Discogs API key and secret. This can be done [here](https://www.discogs.com/developers)
 
+### Spotify API
+The app uses Spotify API to provide the possibility to listen to certain albums when viewing album details if certain album is available on Spotify. You need to register for a Spotify API client ID and secret, which could be done [here](https://developer.spotify.com/documentation/web-api)
 
+## ACKNOWLEGMENTS
+- **[Flask](https://flask.palletsprojects.com/en/3.0.x/)**
+- **[Discogs API](https://www.discogs.com/developers)**
+- **[Spotify API](https://developer.spotify.com/documentation/web-api)**
+- **[Bootstrap](https://getbootstrap.com/)**
