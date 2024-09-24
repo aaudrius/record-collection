@@ -54,7 +54,7 @@ def fetch_with_retry(url, params, retries=MAX_RETRIES):
 def fetch_detailed_release_info(result_id, result_type):
     if result_type == 'master':
         url = f"https://api.discogs.com/masters/{result_id}"
-    else:  # results could be of type 'release'
+    else:
         url = f"https://api.discogs.com/releases/{result_id}"
 
     params = {
