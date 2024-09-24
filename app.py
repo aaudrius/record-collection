@@ -19,6 +19,11 @@ app = Flask(__name__)
 config_name = os.getenv('FLASK_ENV', 'default')
 app.config.from_object(config[config_name])
 
+db_url = app.config['SQLALCHEMY_DATABASE_URI']
+if db_url.startswith('postgres://'):
+    db_url = db_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+
 init_db(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager()
