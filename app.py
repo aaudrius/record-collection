@@ -11,13 +11,12 @@ import requests
 import json
 import re
 import time
+from config import config
 
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'somesecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///record_collection.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object(config[os.getenv('FLASK_ENV', 'default')])
 
 init_db(app)
 migrate = Migrate(app, db)
