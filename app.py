@@ -16,7 +16,8 @@ from config import config
 load_dotenv()
 
 app = Flask(__name__)
-app.config.from_object(config[os.getenv('FLASK_ENV', 'default')])
+config_name = os.getenv('FLASK_ENV', 'default')
+app.config.from_object(config[config_name])
 
 init_db(app)
 migrate = Migrate(app, db)

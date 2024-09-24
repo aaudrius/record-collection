@@ -10,7 +10,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'record_collection.db')
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', 'postgresql://localhost/mydatabase')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 config = {
     'development': DevelopmentConfig,
