@@ -1,6 +1,6 @@
 # Record Collection App
 
-This is a web application made for record collectors who would like to have their record collection stored and managed and shared with other users within one app. 
+This is a web application made for record collectors who would like to have their record collection stored, managed and shared with other users within one app. 
 This app allows users to search for records, add them to their collection, and view details about each record.
 It also allows users to listen to certain records if it is available.
 It integrates with the Discogs and Spotify APIs to fetch record information and cover images and to listen to the records if they are available on Spotify.
