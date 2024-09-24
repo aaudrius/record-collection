@@ -21,13 +21,13 @@ document.addEventListener("DOMContentLoaded", function() {
               constraints: {
                   facingMode: 'environment'
               },
-              area: { // defines rectangle of the detection/localization area
-                  top: "20%",    // top offset
-                  right: "20%",  // right offset
-                  left: "20%",   // left offset
-                  bottom: "20%"  // bottom offset
+              area: { 
+                  top: "20%",
+                  right: "20%",
+                  left: "20%",
+                  bottom: "20%"
               },
-              singleChannel: false // true: only the red color-channel is read
+              singleChannel: false
           },
           decoder: {
               readers: [
@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   document.getElementById('close-barcode-btn').onclick = function() {
       Quagga.stop();
-      videoElement.srcObject.getTracks().forEach(track => track.stop()); // Stop the video stream
+      videoElement.srcObject.getTracks().forEach(track => track.stop());
       document.getElementById('barcode-scanner').style.display = 'none';
   };
 });
